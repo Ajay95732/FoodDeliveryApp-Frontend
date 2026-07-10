@@ -10,19 +10,28 @@ export default function SearchBar({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="position-relative">
+    <form onSubmit={handleSubmit} className="mb-4">
+      <div className="input-group shadow-sm">
+
+        <span className="input-group-text bg-white border-end-0">
+          <FaSearch />
+        </span>
+
         <input
           type="text"
-          className="form-control ps-5"
-          placeholder="Search..."
+          className="form-control border-start-0"
+          placeholder="Search for Pizza, Burger, Biryani..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
 
-        <FaSearch
-          className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
-        />
+        <button
+          type="submit"
+          className="btn btn-warning fw-bold"
+        >
+          Search
+        </button>
+
       </div>
     </form>
   );

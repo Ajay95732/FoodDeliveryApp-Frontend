@@ -1,40 +1,49 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../services/authService";
+import { registerUser } from "../services/authService";
 
-export default function Login() {
+export default function Signup() {
   const navigate = useNavigate();
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      alert("Please enter Email and Password.");
+  const handleSignup = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
       return;
     }
 
     try {
       setLoading(true);
 
-      const response = await loginUser({
+      const response = await registerUser({
+        name,
         email,
         password,
       });
 
       if (response.ok) {
-        const data = await response.json();
+        alert("Account Created Successfully 🎉");
 
-        // Save logged-in user details
-        localStorage.setItem("user", JSON.stringify(data.user));
+        setName("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
 
-        alert("Login Successful 🎉");
-
-        navigate("/");
+        navigate("/login");
       } else {
         const error = await response.text();
-        alert(error || "Invalid Email or Password");
+        alert(error || "Signup Failed");
       }
     } catch (err) {
       console.error(err);
@@ -64,11 +73,11 @@ export default function Login() {
               fontSize: "3rem",
             }}
           >
-            Welcome Back 👋
+            Join FoodExpress 🍔
           </h1>
 
           <p className="text-muted fs-5 mb-4">
-            Login to continue ordering your favourite food.
+            Create your account and enjoy delicious food delivered to your doorstep.
           </p>
 
           <div
@@ -78,7 +87,18 @@ export default function Login() {
               borderRadius: "18px",
             }}
           >
-            <h3 className="fw-bold mb-4">Login</h3>
+            <h3 className="fw-bold mb-4">
+              Create Account
+            </h3>
+
+            <input
+              type="text"
+              className="form-control mb-3"
+              placeholder="Full Name"
+              style={{ height: "55px" }}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
 
             <input
               type="email"
@@ -98,6 +118,15 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
+            <input
+              type="password"
+              className="form-control mb-4"
+              placeholder="Confirm Password"
+              style={{ height: "55px" }}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+
             <button
               className="btn text-white fw-bold"
               style={{
@@ -105,22 +134,23 @@ export default function Login() {
                 height: "55px",
                 fontSize: "18px",
               }}
-              onClick={handleLogin}
+              onClick={handleSignup}
               disabled={loading}
             >
-              {loading ? "Logging In..." : "LOGIN"}
+              {loading ? "Creating Account..." : "CREATE ACCOUNT"}
             </button>
 
             <p className="text-center mt-4 mb-0">
-              New to FoodExpress?{" "}
+              Already have an account?{" "}
               <Link
-                to="/signup"
+                to="/login"
                 className="text-decoration-none fw-bold"
                 style={{ color: "#fc8019" }}
               >
-                Create an account
+                Login
               </Link>
             </p>
+
           </div>
 
         </div>

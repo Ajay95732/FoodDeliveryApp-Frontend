@@ -1,16 +1,22 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./Pages/Home";
-import Electronics from "./Pages/Electronics";
-import Clothes from "./Pages/Clothes";
-import Grocery from "./Pages/Grocery";
-import Sports from "./Pages/Sports";
-import Food from "./Pages/Food";
-import Cart from "./Pages/Cart";
-import Login from "./Pages/Login";
-import Furniture from "./Pages/Furniture";
+// Components
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-import Navbar from "./Components/Navbar";
+// Pages
+import Home from "./pages/Home";
+import Products from "./pages/Products";
+import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
+import Wishlist from "./pages/Wishlist";
+import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import NotFound from "./pages/NotFound";
+import RestaurantDetails from "./pages/RestaurantDetails";
 
 function App() {
   return (
@@ -19,15 +25,24 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/electronics" element={<Electronics />} />
-        <Route path="/clothes" element={<Clothes />} />
-        <Route path="/grocery" element={<Grocery />} />
-        <Route path="/sports" element={<Sports />} />
-        <Route path="/food" element={<Food />} />
-        <Route path="/furniture" element={<Furniture />} />
+        <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+
         <Route path="/cart" element={<Cart />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/profile" element={<Profile />} />
+
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
+
+      <Footer />
     </BrowserRouter>
   );
 }

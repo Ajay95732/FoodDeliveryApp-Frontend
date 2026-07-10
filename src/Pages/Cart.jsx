@@ -1,97 +1,231 @@
-const cartItems = [
-  {
-    id: 1,
-    name: 'Classic Leather Jacket',
-    price: 129.99,
-    quantity: 1,
-    image: 'https://via.placeholder.com/100',
-  },
-  {
-    id: 2,
-    name: 'Slim Fit Jeans',
-    price: 69.99,
-    quantity: 2,
-    image: 'https://via.placeholder.com/100',
-  },
-  {
-    id: 3,
-    name: 'Everyday Sneakers',
-    price: 89.99,
-    quantity: 1,
-    image: 'https://via.placeholder.com/100',
-  },
-];
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-function Cart() {
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal > 0 ? 9.99 : 0;
-  const total = subtotal + shipping;
+export default function Cart() {
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    const cartItems =
+      JSON.parse(localStorage.getItem("cart")) || [];
+
+    setCart(cartItems);
+  }, []);
+
+  const updateCart = (updatedCart) => {
+    setCart(updatedCart);
+
+    localStorage.setItem(
+      "cart",
+      JSON.stringify(updatedCart)
+    );
+
+    // Update Navbar Count
+    window.dispatchEvent(
+      new Event("cartUpdated")
+    );
+  };
+
+  const increaseQty = (id) => {
+    const updatedCart = cart.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            quantity: item.quantity + 1,
+          }
+        : item
+    );
+
+    updateCart(updatedCart);
+  };
+
+  const decreaseQty = (id) => {
+    const updatedCart = cart.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            quantity: Math.max(
+              1,
+              item.quantity - 1
+            ),
+          }
+        : item
+    );
+
+    updateCart(updatedCart);
+  };
+
+  const removeItem = (id) => {
+    const updatedCart = cart.filter(
+      (item) => item.id !== id
+    );
+
+    updateCart(updatedCart);
+  };
+
+  const totalAmount = cart.reduce(
+    (total, item) =>
+      total + item.price * item.quantity,
+    0
+  );
+
+  if (cart.length === 0) {
+    return (
+      <div className="container text-center py-5">
+        <h2>Your Cart is Empty 🛒</h2>
+
+        <Link
+          to="/products"
+          className="btn btn-warning mt-3"
+        >
+          Browse Foods
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <div className="col-12 mb-4">
-          <h1 className="mb-1">Shopping Cart</h1>
-          <p className="text-muted">Review your items and complete your purchase.</p>
-        </div>
-      </div>
+    <div className="container py-5">
+
+      <h2 className="fw-bold mb-4">
+        🛒 Your Cart
+      </h2>
 
       <div className="row">
+
+        {/* Cart Items */}
         <div className="col-lg-8">
-          <div className="card mb-4 shadow-sm">
-            <div className="card-body">
-              {cartItems.length === 0 ? (
-                <p className="mb-0">Your cart is empty. Add products to get started.</p>
-              ) : (
-                cartItems.map((item) => (
-                  <div key={item.id} className="d-flex align-items-center mb-4">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="img-fluid rounded"
-                      style={{ width: 100, height: 100, objectFit: 'cover' }}
-                    />
-                    <div className="ms-3 flex-grow-1">
-                      <h5 className="mb-1">{item.name}</h5>
-                      <p className="mb-1 text-muted">Quantity: {item.quantity}</p>
-                      <p className="mb-0 fw-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+
+          {cart.map((item) => (
+            <div
+              key={item.id}
+              className="card border-0 shadow-sm mb-3"
+            >
+              <div className="row g-0">
+
+                <div className="col-md-3">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="img-fluid rounded-start"
+                    style={{
+                      height: "150px",
+                      width: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+
+                <div className="col-md-9">
+
+                  <div className="card-body">
+
+                    <h5 className="fw-bold">
+                      {item.name}
+                    </h5>
+
+                    <h6 className="text-success">
+                      ₹{item.price}
+                    </h6>
+
+                    <div className="d-flex align-items-center gap-2 my-3">
+
+                      <button
+                        className="btn btn-outline-secondary"
+                        onClick={() =>
+                          decreaseQty(item.id)
+                        }
+                      >
+                        -
+                      </button>
+
+                      <span className="fw-bold">
+                        {item.quantity}
+                      </span>
+
+                      <button
+                        className="btn btn-outline-secondary"
+                        onClick={() =>
+                          increaseQty(item.id)
+                        }
+                      >
+                        +
+                      </button>
+
                     </div>
-                    <button type="button" className="btn btn-outline-secondary btn-sm">
+
+                    <p className="fw-bold">
+                      Total: ₹
+                      {item.price *
+                        item.quantity}
+                    </p>
+
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() =>
+                        removeItem(item.id)
+                      }
+                    >
                       Remove
                     </button>
+
                   </div>
-                ))
-              )}
+
+                </div>
+
+              </div>
             </div>
-          </div>
+          ))}
+
         </div>
 
+        {/* Bill Details */}
         <div className="col-lg-4">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h5 className="card-title">Order Summary</h5>
-              <div className="d-flex justify-content-between mb-2">
-                <span>Subtotal</span>
-                <strong>${subtotal.toFixed(2)}</strong>
-              </div>
-              <div className="d-flex justify-content-between mb-2">
-                <span>Shipping</span>
-                <strong>${shipping.toFixed(2)}</strong>
-              </div>
-              <hr />
-              <div className="d-flex justify-content-between mb-4">
-                <span className="fw-semibold">Total</span>
-                <strong>${total.toFixed(2)}</strong>
-              </div>
-              <button type="button" className="btn btn-primary w-100">
-                Proceed to Checkout
-              </button>
+
+          <div className="card border-0 shadow-sm p-4">
+
+            <h4 className="fw-bold">
+              Bill Details
+            </h4>
+
+            <hr />
+
+            <div className="d-flex justify-content-between mb-2">
+              <span>Items Total</span>
+              <span>₹{totalAmount}</span>
             </div>
+
+            <div className="d-flex justify-content-between mb-2">
+              <span>Delivery Fee</span>
+              <span>₹40</span>
+            </div>
+
+            <div className="d-flex justify-content-between mb-2">
+              <span>GST</span>
+              <span>₹20</span>
+            </div>
+
+            <hr />
+
+            <div className="d-flex justify-content-between">
+              <strong>Grand Total</strong>
+              <strong>
+                ₹{totalAmount + 60}
+              </strong>
+            </div>
+
+            <Link
+              to="/checkout"
+              className="btn btn-success mt-4"
+            >
+              Proceed To Checkout
+            </Link>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
   );
 }
-
-export default Cart;

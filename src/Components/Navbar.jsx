@@ -1,37 +1,118 @@
-import { Link, useNavigate } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa";
-import SearchBar from "../Pages/SearchBar";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  const navigate = useNavigate();
+  const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
 
-  const handleSearch = (term) => {
-    if (!term.trim()) return;
-    navigate(`/search/${term}`);
+useEffect(() => {
+  const updateCounts = () => {
+    const cart =
+      JSON.parse(localStorage.getItem("cart")) || [];
+
+    const wishlist =
+      JSON.parse(localStorage.getItem("wishlist")) || [];
+
+    setCartCount(cart.length);
+    setWishlistCount(wishlist.length);
   };
 
+  updateCounts();
+
+  window.addEventListener("storage", updateCounts);
+  window.addEventListener("cartUpdated", updateCounts);
+  window.addEventListener("wishlistUpdated", updateCounts);
+
+  return () => {
+    window.removeEventListener("storage", updateCounts);
+    window.removeEventListener("cartUpdated", updateCounts);
+    window.removeEventListener("wishlistUpdated", updateCounts);
+  };
+}, []);
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary px-4">
+    <nav
+      className="navbar navbar-expand-lg navbar-dark shadow-sm"
+      style={{ backgroundColor: "#fc8019" }}
+    >
+      <div className="container">
 
-      {/* Logo */}
-      <Link className="navbar-brand fw-bold" to="/">
-        MyShop
-      </Link>
+        <Link
+          className="navbar-brand fw-bold fs-3"
+          to="/"
+        >
+          🍔 FoodExpress
+        </Link>
 
-      {/* Search Bar */}
-      <div className="me-3 ms-auto" style={{ width: "250px" }}>
-        <SearchBar onSearch={handleSearch} />
+        <button
+          className="navbar-toggler"
+          data-bs-toggle="collapse"
+          data-bs-target="#nav"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div
+          className="collapse navbar-collapse"
+          id="nav"
+        >
+          <ul className="navbar-nav ms-auto">
+
+            <li className="nav-item">
+              <Link className="nav-link" to="/">
+                🏠 Home
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/products"
+              >
+                🍽 Foods
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/wishlist"
+              >
+                ❤️ Wishlist ({wishlistCount})
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/cart"
+              >
+                🛒 Cart ({cartCount})
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/orders"
+              >
+                📦 Orders
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/login"
+              >
+                Login
+              </Link>
+            </li>
+
+          </ul>
+        </div>
+
       </div>
-
-      {/* Right Side */}
-      <Link className="btn btn-light me-3" to="/login">
-        Login
-      </Link>
-
-      <Link to="/cart" className="text-white">
-        <FaShoppingCart size={22} />
-      </Link>
-
     </nav>
   );
 }
