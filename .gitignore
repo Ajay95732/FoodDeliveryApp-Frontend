@@ -1,24 +1,77 @@
+# ============================
+# Dependencies
+# ============================
+node_modules/
+
+# ============================
+# Build Output
+# ============================
+dist/
+dist-ssr/
+build/
+
+# ============================
+# Environment Files
+# ============================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ============================
 # Logs
-logs
+# ============================
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# ============================
+# Uploads (if your frontend stores local uploads)
+# ============================
+public/uploads/
+src/uploads/
+uploads/
 
-# Editor directories and files
+# ============================
+# Editor Files
+# ============================
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# ============================
+# Operating System Files
+# ============================
+.DS_Store
+Thumbs.db
+
+# ============================
+# Cache
+# ============================
+.cache/
+.parcel-cache/
+.eslintcache
+
+# ============================
+# Coverage
+# ============================
+coverage/
+
+# ============================
+# Temporary Files
+# ============================
+*.tmp
+*.temp
+# Uploads
+public/uploads/
+src/uploads/
+uploads/

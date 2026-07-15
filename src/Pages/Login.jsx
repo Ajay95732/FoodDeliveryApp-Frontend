@@ -26,16 +26,23 @@ export default function Login() {
       if (response.ok) {
         const data = await response.json();
 
-        // Save logged-in user details
+        // Save User Details
         localStorage.setItem("user", JSON.stringify(data.user));
 
         alert("Login Successful 🎉");
 
-        navigate("/");
+        // Redirect Based on Role
+        if (data.user.role === "Admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
+
       } else {
         const error = await response.text();
         alert(error || "Invalid Email or Password");
       }
+
     } catch (err) {
       console.error(err);
       alert("Unable to connect to server.");
@@ -55,6 +62,7 @@ export default function Login() {
       <div className="row min-vh-100">
 
         {/* Left Side */}
+
         <div className="col-lg-6 d-flex flex-column justify-content-center px-5">
 
           <h1
@@ -84,7 +92,6 @@ export default function Login() {
               type="email"
               className="form-control mb-3"
               placeholder="Email Address"
-              style={{ height: "55px" }}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -93,25 +100,20 @@ export default function Login() {
               type="password"
               className="form-control mb-3"
               placeholder="Password"
-              style={{ height: "55px" }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
 
             <button
-              className="btn text-white fw-bold"
-              style={{
-                background: "#fc8019",
-                height: "55px",
-                fontSize: "18px",
-              }}
+              className="btn text-white"
+              style={{ background: "#fc8019" }}
               onClick={handleLogin}
               disabled={loading}
             >
               {loading ? "Logging In..." : "LOGIN"}
             </button>
 
-            <p className="text-center mt-4 mb-0">
+            <p className="text-center mt-4">
               New to FoodExpress?{" "}
               <Link
                 to="/signup"
@@ -121,11 +123,13 @@ export default function Login() {
                 Create an account
               </Link>
             </p>
+
           </div>
 
         </div>
 
         {/* Right Side */}
+
         <div
           className="col-lg-6 d-none d-lg-flex align-items-center justify-content-center"
           style={{
@@ -136,9 +140,6 @@ export default function Login() {
             src="https://ouch-cdn2.icons8.com/WsS_X0PdB0-v5OVS6M7R8cRj3jSkg2b4iEzD5V5QYwI/rs:fit:800:800/czM6Ly9pY29uczgvb3VjaC1pbWFnZXMvcHJldmlldy82NjIvYzI0NzY2ZWQtODhmMi00M2JkLTg0ZmQtNzM5ODQ1YjRhYzM0LnBuZw.png"
             alt="Food Delivery"
             className="img-fluid"
-            style={{
-              maxWidth: "80%",
-            }}
           />
         </div>
 

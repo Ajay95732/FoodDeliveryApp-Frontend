@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { addOrder } from "../services/orderService";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -19,40 +20,58 @@ export default function Checkout() {
     });
   };
 
-  const placeOrder = (e) => {
+  const placeOrder = async (e) => {
     e.preventDefault();
 
-    const cart =
-      JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     if (cart.length === 0) {
-      alert("Your cart is empty!");
-      return;
+        alert("Your cart is empty!");
+        return;
     }
 
-    const orders =
-      JSON.parse(localStorage.getItem("orders")) || [];
-
-    const newOrder = {
-      id: Date.now(),
-      customer: formData,
-      items: cart,
-      date: new Date().toLocaleString(),
-    };
-
-    orders.push(newOrder);
-
-    localStorage.setItem(
-      "orders",
-      JSON.stringify(orders)
+    const totalAmount = cart.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
     );
 
-    localStorage.removeItem("cart");
+    const order = {
+        customerName: formData.name,
+        phone: formData.phone,
+        address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
+        totalAmount: totalAmount,
 
-    alert("Order Placed Successfully 🎉");
+        items: cart.map((item) => ({
+            productId: item.id,
+            productName: item.name,
+            price: item.price,
+            quantity: item.quantity
+        }))
+    };
 
-    navigate("/orders");
-  };
+    try {
+
+        await addOrder(order);
+
+        localStorage.removeItem("cart");
+
+        alert("Order Placed Successfully 🎉");
+
+        navigate("/orders");
+
+    }
+    catch (error) {
+    console.error("Full Error:", error);
+
+    if (error.response) {
+        console.log("Status:", error.response.status);
+        console.log("Data:", error.response.data);
+        alert(JSON.stringify(error.response.data));
+    } else {
+        alert(error.message);
+    }
+}
+};
 
   return (
     <div className="container py-5">
@@ -76,8 +95,9 @@ export default function Checkout() {
                   name="name"
                   placeholder="Full Name"
                   className="form-control mb-3"
-                  required
+                  value={formData.name}
                   onChange={handleChange}
+                  required
                 />
 
                 <input
@@ -85,8 +105,9 @@ export default function Checkout() {
                   name="phone"
                   placeholder="Phone Number"
                   className="form-control mb-3"
-                  required
+                  value={formData.phone}
                   onChange={handleChange}
+                  required
                 />
 
                 <textarea
@@ -94,8 +115,9 @@ export default function Checkout() {
                   placeholder="Delivery Address"
                   className="form-control mb-3"
                   rows="3"
-                  required
+                  value={formData.address}
                   onChange={handleChange}
+                  required
                 />
 
                 <input
@@ -103,8 +125,9 @@ export default function Checkout() {
                   name="city"
                   placeholder="City"
                   className="form-control mb-3"
-                  required
+                  value={formData.city}
                   onChange={handleChange}
+                  required
                 />
 
                 <input
@@ -112,8 +135,9 @@ export default function Checkout() {
                   name="pincode"
                   placeholder="Pincode"
                   className="form-control mb-4"
-                  required
+                  value={formData.pincode}
                   onChange={handleChange}
+                  required
                 />
 
                 <button
