@@ -1,77 +1,51 @@
-# ============================
-# Dependencies
-# ============================
-node_modules/
-
-# ============================
-# Build Output
-# ============================
-dist/
-dist-ssr/
-build/
-
-# ============================
-# Environment Files
-# ============================
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# ============================
 # Logs
-# ============================
-logs/
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-# ============================
-# Uploads (if your frontend stores local uploads)
-# ============================
+# Dependencies
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+build/
+
+# Environment files
+.env
+.env.*
+*.local
+
+# Uploads
 public/uploads/
 src/uploads/
 uploads/
 
-# ============================
-# Editor Files
-# ============================
+# Coverage
+coverage/
+
+# Cache
+.cache/
+.eslintcache
+
+# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea/
+.idea
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-# ============================
-# Operating System Files
-# ============================
+# Operating System files
 .DS_Store
 Thumbs.db
 
-# ============================
-# Cache
-# ============================
-.cache/
-.parcel-cache/
-.eslintcache
-
-# ============================
-# Coverage
-# ============================
-coverage/
-
-# ============================
-# Temporary Files
-# ============================
+# Temporary files
 *.tmp
 *.temp
-# Uploads
-public/uploads/
-src/uploads/
-uploads/

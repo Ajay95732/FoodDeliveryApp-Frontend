@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminLayout from "../../components/admin/AdminLayout";
+import { getCategories } from "../../services/categoryService";
 import {
   addProduct,
   getProductById,
   updateProduct
 } from "../../services/productService";
-
+import { uploadImage } from "../../services/uploadService";
 
 export default function AddProduct() {
 
@@ -16,14 +17,14 @@ export default function AddProduct() {
 
 
   const [product, setProduct] = useState({
-
     name: "",
     description: "",
     price: "",
     imageUrl: "",
-    category: ""
-
-  });
+    categoryId: ""
+});
+const [imageType, setImageType] = useState("file");
+  const [categories, setCategories] = useState([]);
 
 
   const isEdit = Boolean(id);
@@ -32,11 +33,13 @@ export default function AddProduct() {
 
   useEffect(() => {
 
-    if(isEdit){
-      loadProduct();
+    loadCategories();
+
+    if (isEdit) {
+        loadProduct();
     }
 
-  }, [id]);
+}, [id]);
 
 
 
@@ -46,7 +49,19 @@ export default function AddProduct() {
 
       const data = await getProductById(id);
 
-      setProduct(data);
+setProduct({
+    name: data.name,
+    description: data.description,
+    price: data.price,
+    imageUrl: data.imageUrl,
+    categoryId: data.categoryId
+});
+
+
+if(data.imageUrl)
+{
+    setImageType("url");
+}
 
     }
     catch(error){
@@ -73,6 +88,32 @@ export default function AddProduct() {
     });
 
   };
+  const handleImageUpload = async (e) => {
+
+    const file = e.target.files[0];
+
+    if (!file)
+        return;
+
+    try {
+
+        const imageUrl = await uploadImage(file);
+
+        setProduct(prev => ({
+    ...prev,
+    imageUrl: imageUrl
+}));
+
+    }
+    catch (error) {
+
+        console.log(error);
+
+        alert("Image upload failed");
+
+    }
+
+};
 
 
 
@@ -88,13 +129,11 @@ export default function AddProduct() {
       if(isEdit){
 
 
-        await updateProduct(id,{
-
-          ...product,
-
-          price:Number(product.price)
-
-        });
+        await updateProduct(id, {
+    ...product,
+    price: Number(product.price),
+    categoryId: Number(product.categoryId)
+});
 
 
         alert("Product updated successfully");
@@ -103,20 +142,14 @@ export default function AddProduct() {
       }
       else{
 
+    await addProduct({
+        ...product,
+        price: Number(product.price),
+        categoryId: Number(product.categoryId)
+    });
 
-        await addProduct({
-
-          ...product,
-
-          price:Number(product.price)
-
-        });
-
-
-        alert("Product added successfully");
-
-
-      }
+    alert("Product added successfully");
+}
 
 
 
@@ -133,6 +166,14 @@ export default function AddProduct() {
     }
 
   };
+  const loadCategories = async () => {
+    try {
+        const data = await getCategories();
+        setCategories(data);
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 
 
@@ -244,55 +285,132 @@ export default function AddProduct() {
 
             </div>
 
+             <div className="mb-3">
+
+<label className="form-label">
+    Product Image
+</label>
+
+
+<div className="mb-2">
+
+    <input
+        type="radio"
+        name="imageType"
+        value="file"
+        checked={imageType === "file"}
+        onChange={(e)=>setImageType(e.target.value)}
+    />
+
+    <label className="ms-2">
+        Upload File
+    </label>
+
+
+    <input
+        type="radio"
+        name="imageType"
+        value="url"
+        checked={imageType === "url"}
+        onChange={(e)=>setImageType(e.target.value)}
+        className="ms-3"
+    />
+
+    <label className="ms-2">
+        Image URL
+    </label>
+
+</div>
+
+
+
+{
+imageType === "file" && (
+
+<input
+    type="file"
+    className="form-control"
+    accept="image/*"
+    onChange={handleImageUpload}
+/>
+
+)
+}
+
+
+
+{
+imageType === "url" && (
+
+<input
+    type="text"
+    className="form-control"
+    placeholder="Enter image URL"
+    value={product.imageUrl}
+    onChange={(e)=>
+        setProduct({
+            ...product,
+            imageUrl:e.target.value
+        })
+    }
+/>
+
+)
+}
+
+
+
+{
+product.imageUrl && (
+
+<img
+    src={product.imageUrl}
+    alt="Preview"
+    className="mt-3 img-thumbnail"
+    style={{
+        width:"180px",
+        height:"180px",
+        objectFit:"cover"
+    }}
+/>
+
+)
+}
+
+
+</div>
 
 
 
             <div className="mb-3">
 
-              <label className="form-label">
-                Image URL
-              </label>
+    <label className="form-label">
+        Category
+    </label>
 
+    <select
+        className="form-select"
+        name="categoryId"
+        value={product.categoryId}
+        onChange={handleChange}
+        required
+    >
+        <option value="">
+            Select Category
+        </option>
 
-              <input
+        {categories.map(category => (
+            <option
+                key={category.id}
+                value={category.id}
+            >
+                {category.name}
+            </option>
+        ))}
 
-                className="form-control"
+    </select>
 
-                name="imageUrl"
-
-                value={product.imageUrl}
-
-                onChange={handleChange}
-
-              />
-
-
-            </div>
-
-
-
-
-            <div className="mb-3">
-
-              <label className="form-label">
-                Category
-              </label>
-
-
-              <input
-
-                className="form-control"
-
-                name="category"
-
-                value={product.category}
-
-                onChange={handleChange}
-
-              />
-
-
-            </div>
+</div>
 
 
 

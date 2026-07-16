@@ -232,23 +232,16 @@ export default function Products() {
                       <td>
 
                         <img
-
-                          src={product.imageUrl}
-
-                          alt={product.name}
-
-                          width="70"
-
-                          height="70"
-
-                          className="rounded"
-
-                          style={{
-                            objectFit:"cover"
-                          }}
-
-                        />
-
+    src={product.imageUrl}
+    alt={product.name}
+    width="70"
+    height="70"
+    className="rounded"
+    style={{ objectFit: "cover" }}
+    onError={(e) => {
+        e.target.src = "https://via.placeholder.com/70";
+    }}
+/>
                       </td>
 
 
@@ -260,64 +253,44 @@ export default function Products() {
 
 
                       <td>
-                        {product.category}
-                      </td>
-
+    {product.category?.name || "No Category"}
+</td>
 
 
                       <td>
                         ₹{product.price}
                       </td>
-
-
-
-
-
                       <td>
 
+    {/* View */}
+    <button
+    className="btn btn-info btn-sm me-2"
+    onClick={() =>
+        navigate(`/admin/view-product/${product.id}`)
+    }
+>
+    <i className="bi bi-eye"></i>
+</button>
 
-                        {/* Edit Button */}
+    {/* Edit */}
+    <button
+        className="btn btn-primary btn-sm me-2"
+        onClick={() =>
+            navigate(`/admin/edit-product/${product.id}`)
+        }
+    >
+        <i className="bi bi-pencil"></i>
+    </button>
 
-                        <button
+    {/* Delete */}
+    <button
+        className="btn btn-danger btn-sm"
+        onClick={() => handleDelete(product.id)}
+    >
+        <i className="bi bi-trash"></i>
+    </button>
 
-                          className="btn btn-primary btn-sm me-2"
-
-                          onClick={() =>
-                            navigate(
-                              `/admin/edit-product/${product.id}`
-                            )
-                          }
-
-                        >
-
-                          <i className="bi bi-pencil"></i>
-
-
-                        </button>
-
-
-
-
-
-                        {/* Delete Button */}
-
-                        <button
-
-                          className="btn btn-danger btn-sm"
-
-                          onClick={() =>
-                            handleDelete(product.id)
-                          }
-
-                        >
-
-                          <i className="bi bi-trash"></i>
-
-
-                        </button>
-
-
-                      </td>
+</td>
 
 
                     </tr>
