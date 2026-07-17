@@ -21,22 +21,32 @@ import {
   useEffect(() => {
     loadOrders();
 }, []);
+const [loading, setLoading] = useState(false);
 
 const loadOrders = async () => {
+
     try {
+
+        setLoading(true);
 
         const data = await getOrders();
 
         setOrderList(data);
 
     }
-    catch (error) {
+    catch(error){
 
         console.error(error);
 
         alert("Failed to load orders.");
 
     }
+    finally{
+
+        setLoading(false);
+
+    }
+
 };
 
     const filteredOrders = orderList.filter((order) => {
@@ -52,24 +62,45 @@ const loadOrders = async () => {
     });
 
     const badgeColor = (status) => {
-      switch (status) {
+
+    switch(status){
+
         case "Pending":
-          return "warning";
+            return "warning";
+
         case "Preparing":
-          return "info";
+            return "info";
+
+        case "Out for Delivery":
+            return "primary";
+
         case "Delivered":
-          return "success";
+            return "success";
+
         case "Cancelled":
-          return "danger";
+            return "danger";
+
         default:
-          return "secondary";
-      }
-    };
+            return "secondary";
+    }
+
+};
     const saveStatus = async () => {
 
     try {
 
-        await updateOrderStatus(selectedOrder.id, currentStatus);
+       const confirm = window.confirm(
+"Update order status?"
+);
+
+if(!confirm)
+return;
+
+
+await updateOrderStatus(
+selectedOrder.id,
+currentStatus
+);
 
         await loadOrders();
 
@@ -111,6 +142,16 @@ const loadOrders = async () => {
     <i className="bi bi-file-earmark-pdf me-2"></i>
     Export PDF
 </button>
+<button
+className="btn btn-dark ms-2"
+onClick={()=>{
+    loadOrders();
+    setSearch("");
+    setStatus("All");
+}}>
+<i className="bi bi-arrow-clockwise"></i>
+ Refresh
+</button>
 
 
         </div>
@@ -119,7 +160,7 @@ const loadOrders = async () => {
 
         <div className="row mb-4">
 
-          <div className="col-md-3">
+          <div className="col-lg-2 col-md-4">
             <div className="card shadow border-0">
               <div className="card-body text-center">
                 <h6>Total Orders</h6>
@@ -128,7 +169,7 @@ const loadOrders = async () => {
             </div>
           </div>
 
-          <div className="col-md-3">
+          <div className="col-lg-2 col-md-4">
             <div className="card shadow border-0">
               <div className="card-body text-center">
                 <h6>Pending</h6>
@@ -139,7 +180,7 @@ const loadOrders = async () => {
             </div>
           </div>
 
-          <div className="col-md-3">
+          <div className="col-lg-2 col-md-4">
             <div className="card shadow border-0">
               <div className="card-body text-center">
                 <h6>Delivered</h6>
@@ -150,16 +191,53 @@ const loadOrders = async () => {
             </div>
           </div>
 
-          <div className="col-md-3">
+          <div className="col-lg-2 col-md-4">
             <div className="card shadow border-0">
               <div className="card-body text-center">
                 <h6>Total Revenue</h6>
                 <h3 className="text-primary">
-                  ₹{orderList.reduce((sum, o) => sum + o.totalAmount, 0)}
+                  ₹{orderList.reduce(
+(sum,o)=>sum + Number(o.totalAmount),
+0
+).toFixed(2)}
                 </h3>
               </div>
             </div>
           </div>
+          <div className="col-lg-2 col-md-4">
+<div className="card shadow border-0">
+<div className="card-body text-center">
+
+<h6>Preparing</h6>
+
+<h3 className="text-info">
+{
+orderList.filter(
+o=>o.status==="Preparing"
+).length
+}
+</h3>
+
+</div>
+</div>
+</div>
+<div className="col-lg-2 col-md-4">
+<div className="card shadow border-0">
+<div className="card-body text-center">
+
+<h6>Cancelled</h6>
+
+<h3 className="text-danger">
+{
+orderList.filter(
+o=>o.status==="Cancelled"
+).length
+}
+</h3>
+
+</div>
+</div>
+</div>
 
         </div>
 
@@ -181,25 +259,52 @@ const loadOrders = async () => {
 
               </div>
 
-              <div className="col-md-3">
+              <div className="col-lg-2 col-md-4">
 
-                <select
-                  className="form-select"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
+<select
+className="form-select"
+value={status}
+onChange={(e)=>setStatus(e.target.value)}
+>
 
-                  <option value="All">All Status</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Preparing">Preparing</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Cancelled">Cancelled</option>
+<option value="All">
+All Status
+</option>
 
-                </select>
+<option value="Pending">
+Pending
+</option>
 
+<option value="Preparing">
+Preparing
+</option>
+
+<option value="Out for Delivery">
+Out for Delivery
+</option>
+
+<option value="Delivered">
+Delivered
+</option>
+
+<option value="Cancelled">
+Cancelled
+</option>
+
+</select>
+
+</div>
               </div>
 
             </div>
+            {
+loading ? (
+
+<div className="text-center p-5">
+    <div className="spinner-border text-warning"></div>
+</div>
+
+) : (
 
             <div className="table-responsive">
 
@@ -212,16 +317,34 @@ const loadOrders = async () => {
                     <th>Order ID</th>
                     <th>Customer</th>
                     <th>Phone</th>
+                    <th>Address</th>
                     <th>Total</th>
                     <th>Status</th>
                     <th>Date</th>
+                    <th>Items</th>
                     <th>Action</th>
+                  
 
                   </tr>
 
                 </thead>
 
                 <tbody>
+                  {
+filteredOrders.length === 0 && (
+
+<tr>
+
+<td colSpan="9" className="text-center">
+
+No Orders Found
+
+</td>
+
+</tr>
+
+)
+}
 
                   {filteredOrders.map((order) => (
 
@@ -233,7 +356,9 @@ const loadOrders = async () => {
 
                       <td>{order.phone}</td>
 
-                      <td>₹{order.totalAmount}</td>
+                      <td>{order.address}</td>
+
+                      <td>₹{Number(order.totalAmount).toFixed(2)}</td>
 
                       <td>
 
@@ -244,6 +369,12 @@ const loadOrders = async () => {
                       </td>
 
                       <td>{new Date(order.orderDate).toLocaleString()}</td>
+
+                      <td>
+{
+order.orderItems?.length || 0
+}
+</td>
 
                       <td>
 
@@ -287,11 +418,14 @@ const loadOrders = async () => {
 
     try {
 
-        await deleteOrder(order.id);
+       await deleteOrder(order.id);
 
-        await loadOrders();
+await loadOrders();
 
-        alert("Order deleted successfully.");
+setSearch("");
+setStatus("All");
+
+alert("Order deleted successfully.");
 
     }
     catch (error) {
@@ -318,10 +452,13 @@ const loadOrders = async () => {
               </table>
 
             </div>
+)
+  }
 
           </div>
+        
 
-        </div>
+        
         {selectedOrder && !showStatusModal && (
 
   <div
@@ -357,8 +494,7 @@ const loadOrders = async () => {
 
     <p><strong>Address:</strong> {selectedOrder.address}</p>
 
-    <p><strong>Total:</strong> ₹{selectedOrder.totalAmount}</p>
-
+    <p><strong>Total:</strong> ₹{Number(selectedOrder.totalAmount).toFixed(2)}</p>
     <p><strong>Status:</strong> {selectedOrder.status}</p>
 
     <p>
@@ -380,7 +516,9 @@ const loadOrders = async () => {
                 className="border rounded p-2 mb-2"
             >
                 <p className="mb-1">
-                    <strong>{item.productName}</strong>
+                    <strong>
+{item.productName || "Product Removed"}
+</strong>
                 </p>
 
                 <p className="mb-1">
@@ -392,7 +530,7 @@ const loadOrders = async () => {
                 </p>
 
                 <p className="mb-0">
-                    Subtotal : ₹{item.price * item.quantity}
+                  Subtotal : ₹{(item.price * item.quantity).toFixed(2)}
                 </p>
 
             </div>

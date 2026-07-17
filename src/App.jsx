@@ -23,7 +23,10 @@ import RestaurantDetails from "./pages/RestaurantDetails";
 import Dashboard from "./pages/admin/Dashboard";
 import ProductsAdmin from "./pages/admin/Products";
 import AddProduct from "./pages/admin/AddProduct";
+import Categories from "./pages/admin/Categories";
 import AddCategory from "./pages/admin/AddCategory";
+import EditCategory from "./pages/admin/EditCategory";
+import ViewCategory from "./pages/admin/ViewCategory";
 import AddUser from "./pages/admin/AddUser";
 import AdminPage from "./pages/admin/AdminPage";
 import AdminOrders from "./pages/admin/Orders";
@@ -62,23 +65,20 @@ function AppContent() {
                 <Route path="/admin/products" element={<ProductsAdmin />} />
                 <Route path="/admin/add-product" element={<AddProduct />} />
                 <Route path="/admin/edit-product/:id" element={<AddProduct />} />
+                <Route path="/admin/categories" element={<Categories />} />
                 <Route path="/admin/add-category" element={<AddCategory />} />
+                <Route path="/admin/view-category/:id" element={<ViewCategory />}/>
+                <Route path="/admin/edit-category/:id" element={<EditCategory />}/>
                 <Route path="/admin/view-user/:id" element={<ViewUser />} />
                 <Route path="/admin/edit-user/:id" element={<EditUser />} />
-                <Route
-    path="/admin/view-product/:id"
-    element={<ViewProduct />}
-/>
+                <Route path="/admin/view-product/:id" element={<ViewProduct />} />
+
 
                 <Route path="/admin/orders" element={<AdminOrders />} />
 
                 <Route path="/admin/users" element={<AdminPage page="users" />} />
                 <Route path="/admin/add-user" element={<AddUser />} />
 
-                <Route
-                    path="/admin/categories"
-                    element={<AdminPage page="categories" />}
-                />
 
                 {/* 404 */}
                 <Route path="*" element={<NotFound />} />

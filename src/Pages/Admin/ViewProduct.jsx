@@ -61,15 +61,19 @@ export default function ViewProduct() {
                         <div className="col-md-4 text-center">
 
                             <img
-                                src={product.imageUrl}
-                                alt={product.name}
-                                className="img-fluid rounded shadow"
-                                style={{
-                                    width: "250px",
-                                    height: "250px",
-                                    objectFit: "cover"
-                                }}
-                            />
+    src={product.imageUrl}
+    alt={product.name}
+    className="img-fluid rounded shadow"
+    style={{
+    width: "320px",
+    height: "320px",
+    objectFit: "cover",
+    borderRadius:"15px"
+}}
+    onError={(e)=>{
+        e.target.src="https://via.placeholder.com/250";
+    }}
+/>
 
                         </div>
 
@@ -96,13 +100,27 @@ export default function ViewProduct() {
 
                                     <tr>
                                         <th>Category</th>
-                                        <td>{product.category?.name}</td>
+                                        <td>
+    {product.category?.name || "No Category"}
+</td>
                                     </tr>
 
                                     <tr>
                                         <th>Price</th>
                                         <td>₹{product.price}</td>
                                     </tr>
+                                    <tr>
+    <th>Image URL</th>
+    <td>
+        <a 
+          href={product.imageUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          View Image URL
+        </a>
+    </td>
+</tr>
 
                                 </tbody>
 
@@ -114,6 +132,14 @@ export default function ViewProduct() {
                             >
                                 Back
                             </button>
+                            <button
+    className="btn btn-primary ms-2"
+    onClick={() =>
+        navigate(`/admin/edit-product/${product.id}`)
+    }
+>
+    Edit Product
+</button>
 
                         </div>
 

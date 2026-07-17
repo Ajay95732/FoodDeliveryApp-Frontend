@@ -11,13 +11,15 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
+
+const [currentPage, setCurrentPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
 
 
-
-  useEffect(() => {
-    loadProducts();
-  }, []);
+useEffect(() => {
+  loadProducts();
+}, [currentPage]);
 
 
 
@@ -25,15 +27,26 @@ export default function Products() {
 
     try {
 
-      const data = await getProducts();
+      setLoading(true);
 
-      setProducts(data);
-      setFilteredProducts(data);
+      const response = await getProducts(
+        currentPage,
+        10
+      );
+
+
+      setProducts(response.data);
+
+      setFilteredProducts(response.data);
+
+      setTotalPages(response.totalPages);
+
 
     }
     catch(error){
 
       console.log(error);
+
       alert("Unable to load products");
 
     }
@@ -43,7 +56,7 @@ export default function Products() {
 
     }
 
-  };
+};
 
 
 
@@ -160,7 +173,10 @@ export default function Products() {
 
             value={search}
 
-            onChange={(e)=>setSearch(e.target.value)}
+           onChange={(e)=>{
+    setSearch(e.target.value);
+    setCurrentPage(1);
+}}
 
           />
 
@@ -183,9 +199,8 @@ export default function Products() {
             :
 
 
-
+<>
             <table className="table table-hover align-middle">
-
 
               <thead className="table-dark">
 
@@ -303,10 +318,64 @@ export default function Products() {
               </tbody>
 
 
-            </table>
+                        </table>
 
 
+{
+totalPages > 1 && (
+
+<div className="d-flex justify-content-center mt-4">
+
+<button
+className="btn btn-outline-warning mx-1"
+disabled={currentPage === 1}
+onClick={() => setCurrentPage(currentPage - 1)}
+>
+Previous
+</button>
+
+
+{
+Array.from(
+ { length: totalPages },
+ (_, index) => index + 1
+)
+.map(page => (
+
+<button
+key={page}
+className={
+currentPage === page
+? "btn btn-warning mx-1"
+: "btn btn-outline-warning mx-1"
+}
+onClick={() => setCurrentPage(page)}
+>
+{page}
+</button>
+
+))
+}
+
+
+<button
+className="btn btn-outline-warning mx-1"
+disabled={currentPage === totalPages}
+onClick={() => setCurrentPage(currentPage + 1)}
+>
+Next
+</button>
+
+</div>
+)
+}
+
+</>
           }
+            
+
+          
+          
 
 
         </div>
@@ -318,5 +387,6 @@ export default function Products() {
     </AdminLayout>
 
   );
+
 
 }
