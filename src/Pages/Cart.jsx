@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+import axios from "axios";
 export default function Cart() {
   const [cart, setCart] = useState([]);
 
@@ -62,11 +62,116 @@ export default function Cart() {
     updateCart(updatedCart);
   };
 
-  const totalAmount = cart.reduce(
+  const itemTotal = cart.reduce(
     (total, item) =>
-      total + item.price * item.quantity,
+        total + item.price * item.quantity,
     0
-  );
+);
+
+const totalAmount = itemTotal + 60;
+const payNow = async () => {
+
+  try {
+
+    // Create Razorpay Order
+
+    const response = await axios.post(
+      "https://localhost:7249/api/Payment/create-order",
+      {
+        amount: totalAmount
+      }
+    );
+
+
+    const order = response.data;
+
+
+    const options = {
+
+      key: "rzp_test_TFixQhkoksdGGf",
+
+      amount: order.amount,
+
+      currency: "INR",
+
+      name: "Food Delivery",
+
+      description: "Food Order Payment",
+
+      order_id: order.id,
+
+
+      handler: async function(paymentResponse){
+
+    const verifyResponse =
+    await axios.post(
+      "https://localhost:7249/api/Payment/verify",
+      {
+        razorpayOrderId:
+          paymentResponse.razorpay_order_id,
+
+        razorpayPaymentId:
+          paymentResponse.razorpay_payment_id,
+
+        razorpaySignature:
+          paymentResponse.razorpay_signature
+      }
+    );
+
+
+    if(verifyResponse.status === 200)
+    {
+        alert("Payment Successful 🎉");
+
+        localStorage.removeItem("cart");
+
+        window.dispatchEvent(
+          new Event("cartUpdated")
+        );
+
+        setCart([]);
+    }
+
+},
+
+
+      theme:{
+        color:"#28a745"
+      }
+
+    };
+
+
+
+    const razorpay =
+  new window.Razorpay(options);
+
+
+razorpay.on(
+  "payment.failed",
+  function(response){
+
+    console.log(response.error);
+
+    alert("Payment Failed");
+
+  }
+);
+
+
+razorpay.open();
+
+
+  }
+  catch(error){
+
+    console.log(error);
+
+    alert("Payment Failed");
+
+  }
+
+};
 
   if (cart.length === 0) {
     return (
@@ -191,7 +296,7 @@ export default function Cart() {
 
             <div className="d-flex justify-content-between mb-2">
               <span>Items Total</span>
-              <span>₹{totalAmount}</span>
+              <span>₹{itemTotal.toFixed(2)}</span>
             </div>
 
             <div className="d-flex justify-content-between mb-2">
@@ -207,18 +312,18 @@ export default function Cart() {
             <hr />
 
             <div className="d-flex justify-content-between">
-              <strong>Grand Total</strong>
-              <strong>
-                ₹{totalAmount + 60}
-              </strong>
-            </div>
+  <strong>Grand Total</strong>
+  <strong>
+      ₹{totalAmount.toFixed(2)}
+  </strong>
+</div>
 
             <Link
-              to="/checkout"
-              className="btn btn-success mt-4"
-            >
-              Proceed To Checkout
-            </Link>
+ to="/checkout"
+ className="btn btn-success mt-4 w-100"
+>
+ Proceed To Checkout
+</Link>
 
           </div>
 

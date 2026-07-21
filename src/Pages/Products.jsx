@@ -14,9 +14,12 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProducts();
-        setFoods(data);
-        setFilteredFoods(data);
+        const response = await getProducts();
+
+console.log("PRODUCT DATA:", response);
+
+setFoods(response.data);
+setFilteredFoods(response.data);
       } catch (err) {
         console.log("Error fetching products:", err);
       } finally {
@@ -41,7 +44,7 @@ export default function Products() {
     // Category Filter
     if (selectedCategory !== "All") {
       results = results.filter(
-        (food) => food.category === selectedCategory
+        (food) => food.category?.name === selectedCategory
       );
     }
 
@@ -50,9 +53,13 @@ export default function Products() {
 
   // Dynamic Category List
   const categories = [
-    "All",
-    ...new Set(foods.map((food) => food.category)),
-  ];
+  "All",
+  ...new Set(
+    foods
+      .filter(food => food.category)
+      .map(food => food.category.name)
+  ),
+];
 
   if (loading) {
     return (

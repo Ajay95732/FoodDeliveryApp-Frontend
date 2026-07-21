@@ -1,119 +1,333 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getCustomerOrders } from "../services/orderService";
 
-export default function Orders() {
-  const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
-    const savedOrders =
-      JSON.parse(localStorage.getItem("orders")) || [];
+export default function Orders(){
 
-    setOrders(savedOrders);
-  }, []);
+const [orders,setOrders] = useState([]);
+const [loading,setLoading] = useState(true);
 
-  if (orders.length === 0) {
-    return (
-      <div className="container text-center py-5">
-        <h2>📦 No Orders Yet</h2>
 
-        <p className="text-muted">
-          Start ordering your favorite foods.
-        </p>
+useEffect(()=>{
 
-        <Link
-          to="/products"
-          className="btn btn-warning"
-        >
-          Browse Foods
-        </Link>
-      </div>
-    );
-  }
+loadOrders();
 
-  return (
-    <div className="container py-5">
+},[]);
 
-      <h2 className="fw-bold mb-4">
-        📦 My Orders
-      </h2>
 
-      {orders.map((order) => {
-        const total = order.items.reduce(
-          (sum, item) =>
-            sum + item.price * item.quantity,
-          0
-        );
 
-        return (
-          <div
-            key={order.id}
-            className="card shadow-sm border-0 mb-4"
-          >
-            <div className="card-body">
+const loadOrders = async()=>{
 
-              <div className="d-flex justify-content-between">
-                <h5>Order #{order.id}</h5>
-                <span className="badge bg-success">
-                  Delivered
-                </span>
-              </div>
+try{
 
-              <p className="text-muted">
-                {order.date}
-              </p>
+setLoading(true);
 
-              <hr />
+const phone = localStorage.getItem("customerPhone");
 
-              <h6>Customer Details</h6>
+console.log("PHONE FROM STORAGE:", phone);
 
-              <p>
-                <strong>Name:</strong>{" "}
-                {order.customer.name}
-              </p>
 
-              <p>
-                <strong>Phone:</strong>{" "}
-                {order.customer.phone}
-              </p>
+const data = await getCustomerOrders(phone);
 
-              <p>
-                <strong>Address:</strong>{" "}
-                {order.customer.address},{" "}
-                {order.customer.city} -
-                {order.customer.pincode}
-              </p>
+console.log("API RESPONSE:", data);
 
-              <hr />
 
-              <h6>Ordered Items</h6>
+setOrders(data);
 
-              {order.items.map((item) => (
-                <div
-                  key={item.id}
-                  className="d-flex justify-content-between mb-2"
-                >
-                  <span>
-                    {item.name} × {item.quantity}
-                  </span>
 
-                  <span>
-                    ₹
-                    {item.price * item.quantity}
-                  </span>
-                </div>
-              ))}
+}
+catch(error){
 
-              <hr />
+console.log(error);
 
-              <h5 className="text-success">
-                Total: ₹{total}
-              </h5>
+}
+finally{
 
-            </div>
-          </div>
-        );
-      })}
+setLoading(false);
 
-    </div>
-  );
+}
+
+};
+
+
+
+const getStatusClass = (status)=>{
+
+switch(status){
+
+case "Delivered":
+return "bg-success";
+
+case "Preparing":
+return "bg-info";
+
+case "Out for Delivery":
+return "bg-primary";
+
+case "Cancelled":
+return "bg-danger";
+
+default:
+return "bg-warning";
+
+}
+
+};
+
+
+
+return(
+
+<div className="container py-5">
+
+
+<div className="d-flex justify-content-between align-items-center mb-4">
+
+<h2 className="fw-bold">
+My Orders 🛒
+</h2>
+
+
+<button 
+className="btn btn-warning"
+onClick={loadOrders}
+>
+🔄 Refresh
+</button>
+
+
+</div>
+
+
+
+
+{
+loading ?
+
+<div className="text-center">
+<div className="spinner-border text-warning"></div>
+</div>
+
+
+:
+
+orders.length === 0 ?
+
+<div className="text-center mt-5">
+
+<h4>
+No Orders Found 😔
+</h4>
+
+<p>
+Start ordering your favourite food
+</p>
+
+</div>
+
+
+:
+
+
+orders.map(order=>(
+
+
+<div 
+key={order.id}
+className="card shadow border-0 mb-4"
+>
+
+
+<div className="card-body">
+
+
+<div className="d-flex justify-content-between">
+
+
+<h5 className="fw-bold">
+Order #{order.id}
+</h5>
+
+
+<span 
+className={`badge ${getStatusClass(order.status)}`}
+>
+
+{order.status}
+
+</span>
+
+
+</div>
+
+
+
+<hr/>
+
+
+<div className="row">
+
+
+<div className="col-md-6">
+
+
+<p>
+<b>Amount:</b> ₹{order.totalAmount}
+</p>
+
+
+<p>
+<b>Address:</b> {order.address}
+</p>
+
+
+
+<p>
+
+<b>Date:</b>{" "}
+
+{
+new Date(order.orderDate)
+.toLocaleDateString()
+}
+
+</p>
+
+
+</div>
+
+
+<div className="col-md-6">
+
+
+<h6 className="fw-bold">
+Order Tracking
+</h6>
+
+
+<p className={
+order.status
+? "text-success"
+:""
+}>
+✅ Order Placed
+</p>
+
+
+<p className={
+["Preparing",
+"Out for Delivery",
+"Delivered"]
+.includes(order.status)
+?
+"text-success"
+:
+"text-muted"
+}>
+🍳 Preparing Food
+</p>
+
+
+<p className={
+["Out for Delivery",
+"Delivered"]
+.includes(order.status)
+?
+"text-success"
+:
+"text-muted"
+}>
+🚚 Out for Delivery
+</p>
+
+
+
+<p className={
+order.status==="Delivered"
+?
+"text-success"
+:
+"text-muted"
+}>
+🏠 Delivered
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+<hr/>
+
+
+<h6 className="fw-bold">
+Items
+</h6>
+
+
+
+{
+order.orderItems?.map(item=>(
+
+
+<div 
+key={item.id}
+className="d-flex justify-content-between border-bottom py-2"
+>
+
+
+<span>
+{item.productName}
+</span>
+
+
+<span>
+{item.quantity} x ₹{item.price}
+</span>
+
+
+</div>
+
+
+))
+}
+
+
+
+<div className="text-end mt-3">
+
+
+<h5 className="fw-bold">
+
+Total Paid : ₹{order.totalAmount}
+
+</h5>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+))
+
+
+}
+
+
+
+</div>
+
+
+);
+
 }

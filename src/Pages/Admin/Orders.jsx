@@ -9,6 +9,7 @@ import {
     deleteOrder
 } from "../../services/orderService";
 
+
   export default function Orders() {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("All");
@@ -18,34 +19,45 @@ import {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [currentStatus, setCurrentStatus] = useState("");
-  useEffect(() => {
+  useEffect(()=>{
+
+loadOrders();
+
+const interval = setInterval(()=>{
     loadOrders();
-}, []);
+},5000);
+
+
+return ()=>clearInterval(interval);
+
+},[]);
 const [loading, setLoading] = useState(false);
 
-const loadOrders = async () => {
+const loadOrders = async()=>{
 
-    try {
+try{
 
-        setLoading(true);
+setLoading(true);
 
-        const data = await getOrders();
+const data = await getOrders();
 
-        setOrderList(data);
+console.log("ALL ORDERS:", data);
 
-    }
-    catch(error){
+setOrderList(data);
 
-        console.error(error);
+}
+catch(error){
 
-        alert("Failed to load orders.");
+console.log(error);
 
-    }
-    finally{
+alert("Unable to load orders");
 
-        setLoading(false);
+}
+finally{
 
-    }
+setLoading(false);
+
+}
 
 };
 
@@ -107,6 +119,8 @@ currentStatus
         setShowStatusModal(false);
 
         setSelectedOrder(null);
+
+        setCurrentStatus("");
 
         alert("Order status updated successfully.");
 

@@ -83,7 +83,7 @@ export default function ProductCard({ product }) {
             </h5>
 
             <p className="text-muted mb-2">
-              {product.category}
+              Category: {product.category?.name}
             </p>
 
             <p
