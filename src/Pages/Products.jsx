@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
-import { getProducts } from "../services/productService";
-
+import { getProducts } from "../services/productService"
 export default function Products() {
   const [foods, setFoods] = useState([]);
   const [filteredFoods, setFilteredFoods] = useState([]);
@@ -15,11 +14,10 @@ export default function Products() {
     const fetchProducts = async () => {
       try {
         const response = await getProducts();
+        console.log("PRODUCT DATA:", response);
 
-console.log("PRODUCT DATA:", response);
-
-setFoods(response.data);
-setFilteredFoods(response.data);
+setFoods(response);
+setFilteredFoods(response);
       } catch (err) {
         console.log("Error fetching products:", err);
       } finally {
@@ -73,39 +71,98 @@ setFilteredFoods(response.data);
     <div className="container py-5">
 
       {/* Heading */}
-      <h2 className="text-center fw-bold mb-4">
-        🍽 Discover Delicious Foods
-      </h2>
+      <div className="text-center mb-5">
+
+<h1 className="fw-bold">
+
+Discover Your Favourite Food 🍔
+
+</h1>
+
+
+<p className="text-muted">
+
+Fresh food delivered from top restaurants
+
+</p>
+
+
+</div>
 
       {/* Search */}
       <div className="row justify-content-center mb-4">
         <div className="col-lg-6">
-          <input
-            type="text"
-            className="form-control form-control-lg rounded-pill shadow-sm"
-            placeholder="🔍 Search your favorite food..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div className="input-group shadow-sm">
+
+<span className="input-group-text bg-white">
+
+<i className="bi bi-search"></i>
+
+</span>
+
+
+<input
+
+type="text"
+
+className="
+form-control
+form-control-lg
+border-start-0
+"
+
+placeholder="Search delicious food..."
+
+value={search}
+
+onChange={(e)=>setSearch(e.target.value)}
+
+/>
+
+
+</div>
         </div>
       </div>
 
       {/* Category Filter */}
-      <div className="text-center mb-4">
-        {categories.map((category) => (
-          <button
-            key={category}
-            className={`btn m-1 ${
-              selectedCategory === category
-                ? "btn-warning text-white"
-                : "btn-outline-warning"
-            }`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
+      <div className="d-flex flex-wrap justify-content-center gap-2 mb-5">
+
+
+{
+categories.map(category=>(
+
+
+<button
+
+key={category}
+
+className={`
+btn rounded-pill px-4
+
+${
+selectedCategory===category
+?
+"btn-warning"
+:
+"btn-outline-warning"
+}
+
+`}
+
+onClick={()=>setSelectedCategory(category)}
+
+>
+
+{category}
+
+</button>
+
+
+))
+}
+
+
+</div>
 
       {/* Result Count */}
       <div className="text-center mb-4">
@@ -134,3 +191,6 @@ setFilteredFoods(response.data);
     </div>
   );
 }
+
+
+ 

@@ -4,16 +4,13 @@ const API_URL = "https://localhost:7249/api/Product";
 
 
 // Get Products With Pagination
-export const getProducts = async (
-  page = 1,
-  pageSize = 10
-) => {
+export const getProducts = async () => {
 
-  const res = await axios.get(
-    `${API_URL}?page=${page}&pageSize=${pageSize}`
-  );
+ const res = await axios.get(
+ API_URL
+ );
 
-  return res.data;
+ return res.data;
 
 };
 

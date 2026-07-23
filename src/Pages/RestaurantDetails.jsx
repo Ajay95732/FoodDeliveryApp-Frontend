@@ -121,8 +121,7 @@ const restaurants = [
   {
     id: 3,
     name: "Biryani House",
-    image:
-      "https://images.unsplash.com/photo-1701579231346-fbf4a50f0df3",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtWQFgd3t1sPPSxlnk-0TT5KOM6GnliFxVKqudAMSTA&s=10",
     rating: 4.8,
     time: "35 mins",
     address: "Hitech City, Hyderabad",
@@ -135,7 +134,7 @@ const restaurants = [
     rating: 4.8,
     veg: false,
     bestSeller: true,
-    image: "https://images.unsplash.com/photo-1701579231346-fbf4a50f0df3",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtWQFgd3t1sPPSxlnk-0TT5KOM6GnliFxVKqudAMSTA&s=10",
   },
   {
     id: 302,
@@ -144,7 +143,7 @@ const restaurants = [
     rating: 4.9,
     veg: false,
     bestSeller: true,
-    image: "https://images.unsplash.com/photo-1701579231346-fbf4a50f0df3",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtWQFgd3t1sPPSxlnk-0TT5KOM6GnliFxVKqudAMSTA&s=10",
   },
   {
     id: 303,
@@ -153,7 +152,7 @@ const restaurants = [
     rating: 4.5,
     veg: true,
     bestSeller: false,
-    image: "https://images.unsplash.com/photo-1701579231346-fbf4a50f0df3",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtWQFgd3t1sPPSxlnk-0TT5KOM6GnliFxVKqudAMSTA&s=10",
   },
   {
     id: 304,
@@ -162,7 +161,7 @@ const restaurants = [
     rating: 4.4,
     veg: true,
     bestSeller: true,
-    image: "https://images.unsplash.com/photo-1551024601-bec78aea704b",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtWQFgd3t1sPPSxlnk-0TT5KOM6GnliFxVKqudAMSTA&s=10",
   },
   {
     id: 305,
@@ -225,133 +224,467 @@ export default function RestaurantDetails() {
     alert(`${item.name} added to cart 🛒`);
   };
 
-  return (
-    <div className="container py-5">
-      <div className="card border-0 shadow-lg">
+ return (
 
-        <img
-          src={restaurant.image}
-          alt={restaurant.name}
-          className="card-img-top"
-          style={{
-            height: "420px",
-            objectFit: "cover",
-          }}
-        />
+<div className="container py-5">
 
-        <div className="card-body p-4">
 
-          <h2 className="fw-bold">
-            {restaurant.name}
-          </h2>
+{/* Restaurant Header */}
 
-          <p className="text-muted fs-5">
-            {restaurant.cuisine}
-          </p>
+<div className="
+card
+border-0
+shadow
+rounded-4
+overflow-hidden
+mb-5
+">
 
-          <div className="row text-center my-4">
 
-            <div className="col-md-4">
-              ⭐ <strong>{restaurant.rating}</strong>
-            </div>
+<img
 
-            <div className="col-md-4">
-              🚚 {restaurant.time}
-            </div>
+src={restaurant.image}
 
-            <div className="col-md-4">
-              📍 {restaurant.address}
-            </div>
+alt={restaurant.name}
 
-          </div>
+className="
+card-img-top
+"
 
-          <hr />
+style={{
 
-          <h3 className="mb-4">
-            🍽 Menu
-          </h3>
+height:"350px",
 
-          {restaurant.menu.map((item) => (
-  <div
-    key={item.id}
-    className="card mb-3 border-0 shadow-sm"
-  >
-    <div className="card-body">
+objectFit:"cover"
 
-      <div className="row align-items-center">
+}}
 
-        {/* Food Details */}
-        <div className="col-md-8">
+/>
 
-          <h5 className="fw-bold">
-            {item.name}
-          </h5>
 
-          <p className="text-success fw-bold mb-2">
-            ₹{item.price}
-          </p>
 
-          <p className="mb-2">
-            ⭐ {item.rating}
+<div className="card-body p-4">
 
-            {item.bestSeller && (
-              <span className="badge bg-danger ms-2">
-                🔥 Best Seller
-              </span>
-            )}
-          </p>
 
-          {item.veg ? (
-            <span className="badge bg-success">
-              🟢 Veg
-            </span>
-          ) : (
-            <span className="badge bg-danger">
-              🔴 Non-Veg
-            </span>
-          )}
 
-        </div>
+<div className="
+d-flex
+justify-content-between
+align-items-center
+flex-wrap
+">
 
-        {/* Food Image */}
-        <div className="col-md-4 position-relative text-center">
 
-          <img
-            src={item.image}
-            alt={item.name}
-            className="img-fluid rounded shadow"
-            style={{
-              height: "120px",
-              width: "160px",
-              objectFit: "cover",
-            }}
-          />
+<div>
 
-          <button
-            className="btn btn-success shadow position-absolute"
-            style={{
-              bottom: "10px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "100px",
-              fontWeight: "bold",
-            }}
-            onClick={() => addToCart(item)}
-          >
-            ADD
-          </button>
 
-        </div>
+<h1 className="fw-bold">
 
-      </div>
+{restaurant.name}
 
-    </div>
-  </div>
-))}
+</h1>
 
-        </div>
 
-      </div>
-    </div>
-  );
+
+<p className="text-muted fs-5">
+
+{restaurant.cuisine}
+
+</p>
+
+
+</div>
+
+
+
+<span className="
+badge
+bg-success
+fs-6
+px-3
+py-2
+">
+
+⭐ {restaurant.rating}
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+<div className="
+row
+mt-4
+text-center
+">
+
+
+<div className="col-md-4">
+
+
+<div className="
+card
+border-0
+bg-light
+rounded-4
+p-3
+">
+
+
+<h5>
+
+🚚 Delivery
+
+</h5>
+
+
+<p className="mb-0">
+
+{restaurant.time}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div className="col-md-4">
+
+
+<div className="
+card
+border-0
+bg-light
+rounded-4
+p-3
+">
+
+
+<h5>
+
+📍 Location
+
+</h5>
+
+
+<p className="mb-0">
+
+{restaurant.address}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div className="col-md-4">
+
+
+<div className="
+card
+border-0
+bg-light
+rounded-4
+p-3
+">
+
+
+<h5>
+
+🍽 Cuisine
+
+</h5>
+
+
+<p className="mb-0">
+
+{restaurant.cuisine}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+{/* Menu */}
+
+
+
+<h2 className="fw-bold mb-4">
+
+🍽 Recommended Menu
+
+</h2>
+
+
+
+
+
+<div className="row">
+
+
+{
+restaurant.menu.map((item)=>(
+
+
+<div
+
+className="
+col-lg-6
+mb-4
+"
+
+key={item.id}
+
+>
+
+
+<div className="
+card
+border-0
+shadow-sm
+rounded-4
+h-100
+">
+
+
+<div className="
+row
+g-0
+align-items-center
+">
+
+
+<div className="
+col-7
+">
+
+
+<div className="card-body">
+
+
+<h5 className="fw-bold">
+
+{item.name}
+
+</h5>
+
+
+
+<div>
+
+
+<span className="
+text-warning
+fw-bold
+">
+
+⭐ {item.rating}
+
+</span>
+
+
+
+
+{
+item.bestSeller &&
+
+<span className="
+badge
+bg-danger
+ms-2
+">
+
+🔥 Bestseller
+
+</span>
+
+}
+
+
+
+</div>
+
+
+
+
+
+<h5 className="
+text-success
+fw-bold
+mt-2
+">
+
+₹{item.price}
+
+</h5>
+
+
+
+
+
+
+{
+
+item.veg ?
+
+<span className="
+badge
+bg-success
+">
+
+🟢 Veg
+
+</span>
+
+:
+
+<span className="
+badge
+bg-danger
+">
+
+🔴 Non Veg
+
+</span>
+
+
+}
+
+
+
+
+
+<button
+
+className="
+btn
+btn-warning
+rounded-pill
+w-100
+mt-3
+fw-bold
+"
+
+
+onClick={()=>addToCart(item)}
+
+>
+
+
+<i className="bi bi-cart-plus"></i>
+
+ADD
+
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div className="
+col-5
+p-2
+">
+
+
+<img
+
+src={item.image}
+
+alt={item.name}
+
+className="
+img-fluid
+rounded-4
+"
+
+style={{
+
+height:"150px",
+
+width:"100%",
+
+objectFit:"cover"
+
+}}
+
+
+/>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+))
+
+
+}
+
+
+
+</div>
+
+
+
+</div>
+
+);
 }

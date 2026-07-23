@@ -189,148 +189,410 @@ razorpay.open();
   }
 
   return (
-    <div className="container py-5">
 
-      <h2 className="fw-bold mb-4">
-        🛒 Your Cart
-      </h2>
+<div className="container py-5">
 
-      <div className="row">
 
-        {/* Cart Items */}
-        <div className="col-lg-8">
+<h1 className="
+fw-bold
+mb-5
+">
 
-          {cart.map((item) => (
-            <div
-              key={item.id}
-              className="card border-0 shadow-sm mb-3"
-            >
-              <div className="row g-0">
+🛒 Your Cart
 
-                <div className="col-md-3">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="img-fluid rounded-start"
-                    style={{
-                      height: "150px",
-                      width: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
+</h1>
 
-                <div className="col-md-9">
 
-                  <div className="card-body">
 
-                    <h5 className="fw-bold">
-                      {item.name}
-                    </h5>
+<div className="row g-4">
 
-                    <h6 className="text-success">
-                      ₹{item.price}
-                    </h6>
 
-                    <div className="d-flex align-items-center gap-2 my-3">
 
-                      <button
-                        className="btn btn-outline-secondary"
-                        onClick={() =>
-                          decreaseQty(item.id)
-                        }
-                      >
-                        -
-                      </button>
+{/* CART ITEMS */}
 
-                      <span className="fw-bold">
-                        {item.quantity}
-                      </span>
 
-                      <button
-                        className="btn btn-outline-secondary"
-                        onClick={() =>
-                          increaseQty(item.id)
-                        }
-                      >
-                        +
-                      </button>
+<div className="
+col-lg-8
+">
 
-                    </div>
 
-                    <p className="fw-bold">
-                      Total: ₹
-                      {item.price *
-                        item.quantity}
-                    </p>
+<h4 className="fw-bold mb-4">
 
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() =>
-                        removeItem(item.id)
-                      }
-                    >
-                      Remove
-                    </button>
+Your Food Items
 
-                  </div>
+</h4>
 
-                </div>
 
-              </div>
-            </div>
-          ))}
 
-        </div>
+{
+cart.map(item=>(
 
-        {/* Bill Details */}
-        <div className="col-lg-4">
 
-          <div className="card border-0 shadow-sm p-4">
+<div
+key={item.id}
+className="
+card
+border-0
+shadow-sm
+rounded-4
+mb-3
+"
+style={{
+transition:"0.3s"
+}}
+>
 
-            <h4 className="fw-bold">
-              Bill Details
-            </h4>
 
-            <hr />
+<div className="row g-0 align-items-center">
 
-            <div className="d-flex justify-content-between mb-2">
-              <span>Items Total</span>
-              <span>₹{itemTotal.toFixed(2)}</span>
-            </div>
 
-            <div className="d-flex justify-content-between mb-2">
-              <span>Delivery Fee</span>
-              <span>₹40</span>
-            </div>
+<div className="col-md-3">
 
-            <div className="d-flex justify-content-between mb-2">
-              <span>GST</span>
-              <span>₹20</span>
-            </div>
 
-            <hr />
+<img
 
-            <div className="d-flex justify-content-between">
-  <strong>Grand Total</strong>
-  <strong>
-      ₹{totalAmount.toFixed(2)}
-  </strong>
+src={item.image}
+
+className="
+img-fluid
+rounded-start-4
+"
+
+style={{
+
+height:"150px",
+
+width:"100%",
+
+objectFit:"cover"
+
+}}
+
+alt={item.name}
+
+/>
+
+
 </div>
 
-            <Link
- to="/checkout"
- className="btn btn-success mt-4 w-100"
+
+
+
+
+<div className="col-md-9">
+
+
+<div className="card-body">
+
+
+<div className="
+d-flex
+justify-content-between
+">
+
+
+<h5 className="fw-bold">
+
+{item.name}
+
+</h5>
+
+
+
+<button
+
+className="
+btn
+btn-outline-danger
+btn-sm
+rounded-pill
+"
+
+onClick={()=>removeItem(item.id)}
+
 >
- Proceed To Checkout
+
+<i className="bi bi-trash"></i>
+
+</button>
+
+
+</div>
+
+
+
+
+
+<p className="text-muted">
+
+₹{item.price} each
+
+</p>
+
+
+
+
+<div className="
+d-flex
+align-items-center
+gap-3
+">
+
+
+<button
+
+className="
+btn
+btn-warning
+rounded-circle
+"
+
+onClick={()=>decreaseQty(item.id)}
+
+>
+
+-
+
+</button>
+
+
+
+
+<h5>
+
+{item.quantity}
+
+</h5>
+
+
+
+
+<button
+
+className="
+btn
+btn-warning
+rounded-circle
+"
+
+onClick={()=>increaseQty(item.id)}
+
+>
+
++
+
+</button>
+
+
+</div>
+
+
+
+
+
+<h5 className="
+text-success
+mt-3
+fw-bold
+">
+
+₹
+{item.price * item.quantity}
+
+</h5>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+))
+
+}
+
+
+
+</div>
+
+
+
+
+
+
+{/* BILL */}
+
+
+<div className="
+col-lg-4
+">
+
+
+<div className="
+card
+border-0
+shadow
+rounded-4
+p-4
+sticky-top
+"
+style={{
+top:"90px"
+}}
+>
+
+
+<h4 className="fw-bold">
+
+Bill Details
+
+</h4>
+
+
+<hr/>
+
+
+
+
+
+<div className="
+d-flex
+justify-content-between
+mb-3
+">
+
+<span>
+Item Total
+</span>
+
+<strong>
+₹{itemTotal.toFixed(2)}
+</strong>
+
+</div>
+
+
+
+
+
+<div className="
+d-flex
+justify-content-between
+mb-3
+">
+
+<span>
+Delivery Fee
+</span>
+
+<strong>
+₹40
+</strong>
+
+</div>
+
+
+
+
+
+<div className="
+d-flex
+justify-content-between
+mb-3
+">
+
+<span>
+GST
+</span>
+
+<strong>
+₹20
+</strong>
+
+</div>
+
+
+
+
+<hr/>
+
+
+
+
+<div className="
+d-flex
+justify-content-between
+fs-5
+">
+
+
+<strong>
+
+Total
+
+</strong>
+
+
+<strong className="text-success">
+
+₹{totalAmount.toFixed(2)}
+
+</strong>
+
+
+
+</div>
+
+
+
+
+<Link
+
+to="/checkout"
+
+className="
+btn
+btn-warning
+rounded-pill
+w-100
+mt-4
+fw-bold
+py-3
+"
+
+>
+
+
+<i className="bi bi-bag-check"></i>
+
+Proceed To Checkout
+
+
 </Link>
 
-          </div>
 
-        </div>
 
-      </div>
+</div>
 
-    </div>
-  );
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+);
 }

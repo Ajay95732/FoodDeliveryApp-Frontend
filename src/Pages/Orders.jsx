@@ -59,7 +59,7 @@ case "Delivered":
 return "bg-success";
 
 case "Preparing":
-return "bg-info";
+return "bg-info text-dark";
 
 case "Out for Delivery":
 return "bg-primary";
@@ -68,33 +68,45 @@ case "Cancelled":
 return "bg-danger";
 
 default:
-return "bg-warning";
+return "bg-warning text-dark";
 
 }
 
 };
 
-
-
 return(
 
-<div className="container py-5">
-
-
-<div className="d-flex justify-content-between align-items-center mb-4">
-
-<h2 className="fw-bold">
-My Orders 🛒
-</h2>
-
-
-<button 
-className="btn btn-warning"
-onClick={loadOrders}
+<div
+className="container-fluid py-5"
+style={{
+background:"#FFF7F0"
+}}
 >
-🔄 Refresh
-</button>
 
+
+<h1 className="text-center fw-bold mb-5">
+
+My Orders 🛒
+
+</h1>
+
+
+
+<div className="text-end mb-4">
+
+<button
+
+className="btn btn-warning rounded-pill px-4"
+
+onClick={loadOrders}
+
+>
+
+<i className="bi bi-arrow-clockwise me-2"></i>
+
+Refresh Orders
+
+</button>
 
 </div>
 
@@ -104,53 +116,100 @@ onClick={loadOrders}
 {
 loading ?
 
-<div className="text-center">
+
+<div className="text-center py-5">
+
 <div className="spinner-border text-warning"></div>
+
 </div>
+
 
 
 :
 
-orders.length === 0 ?
 
-<div className="text-center mt-5">
+orders.length===0 ?
 
-<h4>
+
+<div className="text-center py-5">
+
+
+<h3>
 No Orders Found 😔
-</h4>
+</h3>
 
-<p>
+
+<p className="text-muted">
+
 Start ordering your favourite food
+
 </p>
 
+
 </div>
 
 
+
 :
+
 
 
 orders.map(order=>(
 
 
-<div 
+<div
+
 key={order.id}
-className="card shadow border-0 mb-4"
+
+className="
+card
+border-0
+shadow
+rounded-4
+mb-4
+"
+
+
 >
 
 
-<div className="card-body">
+<div className="card-body p-4">
 
 
-<div className="d-flex justify-content-between">
+
+<div className="d-flex justify-content-between align-items-center">
 
 
-<h5 className="fw-bold">
-Order #{order.id}
-</h5>
+<div>
+
+<h4 className="fw-bold">
+
+🍔 FoodExpress Order #{order.id}
+
+</h4>
 
 
-<span 
-className={`badge ${getStatusClass(order.status)}`}
+<small className="text-muted">
+
+<i className="bi bi-calendar"></i>
+
+{" "}
+
+{
+new Date(order.orderDate)
+.toLocaleDateString()
+}
+
+</small>
+
+</div>
+
+
+
+<span
+
+className={`badge rounded-pill px-3 py-2 ${getStatusClass(order.status)}`}
+
 >
 
 {order.status}
@@ -158,6 +217,7 @@ className={`badge ${getStatusClass(order.status)}`}
 </span>
 
 
+
 </div>
 
 
@@ -165,92 +225,196 @@ className={`badge ${getStatusClass(order.status)}`}
 <hr/>
 
 
-<div className="row">
+
+
+
+<div className="row g-4">
 
 
 <div className="col-md-6">
 
 
-<p>
-<b>Amount:</b> ₹{order.totalAmount}
-</p>
+<h5 className="fw-bold">
 
+Delivery Details
 
-<p>
-<b>Address:</b> {order.address}
-</p>
-
+</h5>
 
 
 <p>
 
-<b>Date:</b>{" "}
+<i className="bi bi-geo-alt text-warning"></i>
 
-{
-new Date(order.orderDate)
-.toLocaleDateString()
-}
+{" "}
+
+{order.address}
 
 </p>
+
+
+
+<h5 className="fw-bold">
+
+Payment
+
+</h5>
+
+
+<p className="text-success">
+
+<i className="bi bi-check-circle"></i>
+
+Paid
+
+</p>
+
+
+
+<h3 className="text-success fw-bold">
+
+₹{order.totalAmount}
+
+</h3>
+
 
 
 </div>
 
 
+
+
+
 <div className="col-md-6">
 
 
-<h6 className="fw-bold">
+<h5 className="fw-bold mb-4">
+
 Order Tracking
-</h6>
+
+</h5>
 
 
-<p className={
-order.status
-? "text-success"
-:""
-}>
-✅ Order Placed
-</p>
+
+<div className="d-flex justify-content-between text-center">
 
 
-<p className={
+
+<div>
+
+<div className="bg-success text-white rounded-circle p-3">
+
+✅
+
+</div>
+
+<small>
+Placed
+</small>
+
+</div>
+
+
+
+
+
+<div>
+
+<div className={`
+rounded-circle
+p-3
+text-white
+
+${
 ["Preparing",
 "Out for Delivery",
 "Delivered"]
 .includes(order.status)
 ?
-"text-success"
+"bg-success"
 :
-"text-muted"
-}>
-🍳 Preparing Food
-</p>
+"bg-secondary"
+
+}
+
+`}>
+
+🍳
+
+</div>
+
+<small>
+Preparing
+</small>
+
+</div>
 
 
-<p className={
+
+
+
+<div>
+
+<div className={`
+rounded-circle
+p-3
+text-white
+
+${
 ["Out for Delivery",
 "Delivered"]
 .includes(order.status)
 ?
-"text-success"
+"bg-success"
 :
-"text-muted"
-}>
-🚚 Out for Delivery
-</p>
+"bg-secondary"
+
+}
+
+`}>
+
+🚚
+
+</div>
+
+<small>
+Delivery
+</small>
+
+</div>
 
 
 
-<p className={
+
+
+<div>
+
+<div className={`
+rounded-circle
+p-3
+text-white
+
+${
 order.status==="Delivered"
 ?
-"text-success"
+"bg-success"
 :
-"text-muted"
-}>
-🏠 Delivered
-</p>
+"bg-secondary"
+
+}
+
+`}>
+
+🏠
+
+</div>
+
+
+<small>
+Delivered
+</small>
+
+
+</div>
 
 
 
@@ -258,15 +422,24 @@ order.status==="Delivered"
 
 
 </div>
+
+
+</div>
+
 
 
 
 <hr/>
 
 
-<h6 className="fw-bold">
+
+
+
+<h5 className="fw-bold">
+
 Items
-</h6>
+
+</h5>
 
 
 
@@ -274,19 +447,32 @@ Items
 order.orderItems?.map(item=>(
 
 
-<div 
+<div
+
 key={item.id}
-className="d-flex justify-content-between border-bottom py-2"
+
+className="
+d-flex
+justify-content-between
+border-bottom
+py-2
+"
+
+
 >
 
 
 <span>
+
 {item.productName}
+
 </span>
 
 
-<span>
-{item.quantity} x ₹{item.price}
+<span className="fw-semibold">
+
+{item.quantity} × ₹{item.price}
+
 </span>
 
 
@@ -294,7 +480,9 @@ className="d-flex justify-content-between border-bottom py-2"
 
 
 ))
+
 }
+
 
 
 
@@ -303,7 +491,14 @@ className="d-flex justify-content-between border-bottom py-2"
 
 <h5 className="fw-bold">
 
-Total Paid : ₹{order.totalAmount}
+Total Paid :
+
+<span className="text-success">
+
+₹{order.totalAmount}
+
+</span>
+
 
 </h5>
 
@@ -329,5 +524,4 @@ Total Paid : ₹{order.totalAmount}
 
 
 );
-
 }

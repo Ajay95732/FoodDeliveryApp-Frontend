@@ -263,133 +263,493 @@ finally
     
 
   return (
-    <div className="container py-5">
 
-      <div className="row justify-content-center">
+<div className="container py-5">
 
-        <div className="col-md-8">
 
-          <div className="card shadow border-0">
+<h1 className="
+fw-bold
+text-center
+mb-5
+">
 
-            <div className="card-body p-4">
+Checkout 💳
 
-              <h2 className="text-center mb-4">
-                💳 Checkout
-              </h2>
+</h1>
 
-              <form onSubmit={placeOrder}>
 
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Full Name"
-                  className="form-control mb-3"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
 
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone Number"
-                  className="form-control mb-3"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
+<div className="row g-4">
 
-                <textarea
-                  name="address"
-                  placeholder="Delivery Address"
-                  className="form-control mb-3"
-                  rows="3"
-                  value={formData.address}
-                  onChange={handleChange}
-                  required
-                />
 
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                  className="form-control mb-3"
-                  value={formData.city}
-                  onChange={handleChange}
-                  required
-                />
 
-                <input
-                  type="text"
-                  name="pincode"
-                  placeholder="Pincode"
-                  className="form-control mb-4"
-                  value={formData.pincode}
-                  onChange={handleChange}
-                  required
-                />
-                <div className="card bg-light mb-4">
+{/* DELIVERY DETAILS */}
 
-<div className="card-body">
 
-<h5 className="fw-bold">
-Order Summary
-</h5>
+<div className="col-lg-7">
 
-<hr/>
 
-<p>
-Items Total:
-₹{itemTotal.toFixed(2)}
-</p>
+<div className="
+card
+border-0
+shadow-sm
+rounded-4
+">
 
-<p>
-Delivery Fee:
-₹40
-</p>
 
-<p>
-GST:
-₹20
-</p>
+<div className="card-body p-4">
 
-<hr/>
 
-<h5>
-Grand Total:
-₹{totalAmount.toFixed(2)}
-</h5>
+<h4 className="fw-bold mb-4">
+
+<i className="bi bi-geo-alt text-warning"></i>
+
+Delivery Address
+
+</h4>
+
+
+
+<form onSubmit={placeOrder}>
+
+
+<input
+
+type="text"
+
+name="name"
+
+placeholder="Full Name"
+
+className="
+form-control
+form-control-lg
+mb-3
+"
+
+value={formData.name}
+
+onChange={handleChange}
+
+required
+
+/>
+
+
+
+
+
+<input
+
+type="tel"
+
+name="phone"
+
+placeholder="Phone Number"
+
+className="
+form-control
+form-control-lg
+mb-3
+"
+
+value={formData.phone}
+
+onChange={handleChange}
+
+required
+
+/>
+
+
+
+
+
+
+<textarea
+
+name="address"
+
+placeholder="Complete Address"
+
+className="
+form-control
+form-control-lg
+mb-3
+"
+
+rows="3"
+
+value={formData.address}
+
+onChange={handleChange}
+
+required
+
+/>
+
+
+
+
+
+
+
+<div className="row">
+
+
+<div className="col-md-6">
+
+
+<input
+
+type="text"
+
+name="city"
+
+placeholder="City"
+
+className="
+form-control
+form-control-lg
+mb-3
+"
+
+value={formData.city}
+
+onChange={handleChange}
+
+required
+
+/>
+
 
 </div>
 
+
+
+
+
+<div className="col-md-6">
+
+
+<input
+
+type="text"
+
+name="pincode"
+
+placeholder="Pincode"
+
+className="
+form-control
+form-control-lg
+mb-3
+"
+
+value={formData.pincode}
+
+onChange={handleChange}
+
+required
+
+/>
+
+
 </div>
 
-                <button
+
+</div>
+
+
+
+
+<button
+
 type="submit"
-className="btn btn-success w-100"
+
 disabled={loading}
+
+className="
+btn
+btn-warning
+rounded-pill
+w-100
+py-3
+fw-bold
+fs-5
+"
+
 >
+
 
 {
 loading
 ?
 "Processing Payment..."
 :
-"Pay Now"
+"Pay Now ₹"+totalAmount
 }
+
 
 </button>
 
-              </form>
 
-            </div>
 
-          </div>
 
-        </div>
+</form>
 
-      </div>
 
-    </div>
-  );
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* ORDER SUMMARY */}
+
+
+<div className="col-lg-5">
+
+
+<div className="
+card
+border-0
+shadow
+rounded-4
+sticky-top
+"
+
+style={{
+top:"90px"
+}}
+
+>
+
+
+<div className="card-body p-4">
+
+
+<h4 className="fw-bold">
+
+Order Summary 🛒
+
+</h4>
+
+
+<hr/>
+
+
+
+
+
+{
+cart.map(item=>(
+
+
+<div
+key={item.id}
+className="
+d-flex
+justify-content-between
+mb-3
+"
+>
+
+
+<div>
+
+
+<h6 className="mb-0">
+
+{item.name}
+
+</h6>
+
+
+<small className="text-muted">
+
+{item.quantity} × ₹{item.price}
+
+</small>
+
+
+</div>
+
+
+
+<strong>
+
+₹{item.price*item.quantity}
+
+</strong>
+
+
+
+</div>
+
+
+
+))
+}
+
+
+
+
+<hr/>
+
+
+
+
+
+<div className="
+d-flex
+justify-content-between
+mb-2
+">
+
+<span>
+
+Items Total
+
+</span>
+
+
+<span>
+
+₹{itemTotal.toFixed(2)}
+
+</span>
+
+
+</div>
+
+
+
+
+
+<div className="
+d-flex
+justify-content-between
+mb-2
+">
+
+<span>
+
+Delivery Fee
+
+</span>
+
+
+<span>
+
+₹40
+
+</span>
+
+
+</div>
+
+
+
+
+
+<div className="
+d-flex
+justify-content-between
+mb-3
+">
+
+<span>
+
+GST
+
+</span>
+
+
+<span>
+
+₹20
+
+</span>
+
+
+</div>
+
+
+
+
+<hr/>
+
+
+
+
+
+<div className="
+d-flex
+justify-content-between
+fs-5
+">
+
+
+<strong>
+
+Total
+
+</strong>
+
+
+<strong className="text-success">
+
+₹{totalAmount.toFixed(2)}
+
+</strong>
+
+
+</div>
+
+
+
+
+<div className="
+alert
+alert-success
+mt-4
+mb-0
+">
+
+
+<i className="bi bi-shield-check"></i>
+
+Secure Razorpay Payment
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+);
 }

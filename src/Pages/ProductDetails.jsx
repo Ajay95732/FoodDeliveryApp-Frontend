@@ -1,119 +1,229 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getProductById } from "../services/productService"; // Change path if needed
+  import React, { useEffect, useState } from "react";
+  import { useParams, Link } from "react-router-dom";
+  import { getProductById } from "../services/productService"; 
+  import { useNavigate } from "react-router-dom";
+  // Change path if needed
 
-export default function ProductDetails() {
-  const { id } = useParams();
+  export default function ProductDetails() {
 
-  const [food, setFood] = useState(null);
-  const [loading, setLoading] = useState(true);
+    const { id } = useParams();
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const data = await getProductById(id);
-        setFood(data);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
+    const [food, setFood] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [wishlisted,setWishlisted] = useState(false);
+  const addToWishlist = () => {
+
+      let wishlist =
+      JSON.parse(localStorage.getItem("wishlist")) || [];
+
+
+      const exists = wishlist.find(
+        (item)=>item.id === food.id
+      );
+
+
+      if(!exists){
+
+        wishlist.push(food);
+
+        localStorage.setItem(
+          "wishlist",
+          JSON.stringify(wishlist)
+        );
+
+        setWishlisted(true);
+
+        alert("Added to Wishlist ❤️");
+
       }
+      else{
+
+        alert("Already in Wishlist");
+
+      }
+
     };
 
+
+    useEffect(() => {
+
+    const fetchProduct = async () => {
+
+      try {
+
+        const data = await getProductById(id);
+
+  setFood(data);
+
+
+        const wishlist =
+        JSON.parse(localStorage.getItem("wishlist")) || [];
+
+
+        const exists = wishlist.find(
+          (item)=>item.id === data.id
+        );
+
+
+        setWishlisted(!!exists);
+
+
+      }
+      catch(err){
+
+        console.log(err);
+
+      }
+      finally{
+
+        setLoading(false);
+
+      }
+
+    };
+
+
     fetchProduct();
+
   }, [id]);
+    const addToCart = () => {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  const addToCart = () => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingItem = cart.find((item) => item.id === food.id);
 
-    const existingItem = cart.find((item) => item.id === food.id);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          ...food,
+          quantity: 1,
+        });
+      }
 
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({
-        ...food,
-        quantity: 1,
-      });
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      alert(`${food.name} added to cart`);
+    };
+
+  const buyNow = () => {
+
+
+  const cartItem = [
+  {
+  ...food,
+  quantity:1
+  }
+  ];
+
+
+  localStorage.setItem(
+  "cart",
+  JSON.stringify(cartItem)
+  );
+
+
+  navigate("/checkout");
+
+
+  };
+    if (loading) {
+      return (
+        <div className="text-center mt-5">
+          <h2>Loading...</h2>
+        </div>
+      );
     }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
+    if (!food) {
+      return (
+        <div className="text-center mt-5">
+          <h2>Product Not Found</h2>
+        </div>
+      );
+    }
 
-    alert(`${food.name} added to cart`);
-  };
-
-  if (loading) {
     return (
-      <div className="text-center mt-5">
-        <h2>Loading...</h2>
-      </div>
-    );
-  }
+      <div className="container py-5">
+        <Link
+          to="/products"
+          className="btn btn-secondary mb-4"
+        >
+          ← Back to Products
+        </Link>
 
-  if (!food) {
-    return (
-      <div className="text-center mt-5">
-        <h2>Product Not Found</h2>
-      </div>
-    );
-  }
+        <div className="card shadow-lg border-0">
 
-  return (
-    <div className="container py-5">
-      <Link
-        to="/products"
-        className="btn btn-secondary mb-4"
-      >
-        ← Back to Products
-      </Link>
+          <img
+            src={food.imageUrl}
+            alt={food.name}
+            className="card-img-top"
+            style={{
+              height: "400px",
+              objectFit: "cover",
+            }}
+          />
 
-      <div className="card shadow-lg border-0">
+          <div className="card-body">
 
-        <img
-          src={food.imageUrl}
-          alt={food.name}
-          className="card-img-top"
-          style={{
-            height: "400px",
-            objectFit: "cover",
-          }}
-        />
+            <h2 className="fw-bold">
+              {food.name}
+            </h2>
 
-        <div className="card-body">
+            <h3 className="text-success">
+              ₹{food.price}
+            </h3>
 
-          <h2 className="fw-bold">
-            {food.name}
-          </h2>
+            <hr />
 
-          <h3 className="text-success">
-            ₹{food.price}
-          </h3>
+            <p>
+  <strong>Category:</strong> {food.category?.name}
+  </p>
 
-          <hr />
+            <p>
+              <strong>Description:</strong>
+            </p>
 
-          <p>
-            <strong>Category:</strong> {food.category}
-          </p>
+            <p>{food.description}</p>
 
-          <p>
-            <strong>Description:</strong>
-          </p>
+            <div className="d-flex gap-3">
 
-          <p>{food.description}</p>
 
-          <button
-            className="btn btn-success me-2"
-            onClick={addToCart}
-          >
-            Add To Cart
-          </button>
+  <button
+  className="btn btn-success"
+  onClick={addToCart}
+  >
+  🛒 Add To Cart
+  </button>
 
-          <button className="btn btn-warning">
-            Buy Now
-          </button>
 
+
+  <button
+  className="btn btn-warning"
+  onClick={buyNow}
+  >
+  💳 Buy Now
+  </button>
+
+
+
+  <button
+  className="btn btn-light border rounded-circle"
+  style={{
+  width:"45px",
+  height:"45px",
+  fontSize:"22px"
+  }}
+  onClick={addToWishlist}
+  >
+  {wishlisted ? "❤️" : "♡"}
+  </button>
+
+
+  </div>
+
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }

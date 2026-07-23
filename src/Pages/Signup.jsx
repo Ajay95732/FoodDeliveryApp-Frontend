@@ -66,15 +66,9 @@ export default function Signup() {
         {/* Left Side */}
         <div className="col-lg-6 d-flex flex-column justify-content-center px-5">
 
-          <h1
-            className="fw-bold mb-3"
-            style={{
-              color: "#fc8019",
-              fontSize: "3rem",
-            }}
-          >
-            Join FoodExpress 🍔
-          </h1>
+          <h1 className="fw-bold text-warning">
+🍔 FoodExpress
+</h1>
 
           <p className="text-muted fs-5 mb-4">
             Create your account and enjoy delicious food delivered to your doorstep.
@@ -87,9 +81,11 @@ export default function Signup() {
               borderRadius: "18px",
             }}
           >
-            <h3 className="fw-bold mb-4">
-              Create Account
-            </h3>
+            <h3 className="fw-bold">
+
+Create Account
+
+</h3>
 
             <input
               type="text"
